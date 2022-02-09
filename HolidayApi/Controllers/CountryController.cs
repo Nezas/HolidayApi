@@ -1,5 +1,4 @@
-﻿using HolidayApi.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace HolidayApi.Controllers
 {

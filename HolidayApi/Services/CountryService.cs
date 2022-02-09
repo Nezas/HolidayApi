@@ -13,7 +13,7 @@ namespace HolidayApi.Services
                 {
                     using (HttpContent content = response.Content)
                     {
-                        var result = JsonConvert.DeserializeObject<List<Country>>(await content.ReadAsStringAsync());
+                        var result = JsonConvert.DeserializeObject<IEnumerable<Country>>(await content.ReadAsStringAsync());
                         return result;
                     }
                 }
