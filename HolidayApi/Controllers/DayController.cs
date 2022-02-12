@@ -20,5 +20,10 @@ namespace DayApi.Controllers
             return Ok(_dayService.GetDayStatus(country, year, month, day));
         }
 
+        [HttpGet("getMaximumFreeDays/{country}/{year}/")]
+        public async Task<IActionResult> GetMaximumFreeDays(string country, int year)
+        {
+            return Json(_dayService.GetMaximumFreeDays(country, year));
+        }
     }
 }
