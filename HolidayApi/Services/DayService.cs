@@ -11,6 +11,11 @@ namespace HolidayApi.Services
             var isPublicHoliday = IsPublicHoliday(country, year, month, day);
             var isWorkDay = IsWorkDay(country, year, month, day);
 
+            if (isPublicHoliday.Result == null && isWorkDay.Result == null)
+            {
+                return null;
+            }
+
             if (isPublicHoliday.Result == "True")
             {
                 return new DayStatus("holiday");
@@ -30,9 +35,19 @@ namespace HolidayApi.Services
                 {
                     using (HttpContent content = response.Content)
                     {
-                        var result = JsonConvert.DeserializeObject<JToken>(await content.ReadAsStringAsync());
-                        Console.WriteLine(result);
-                        return result["isPublicHoliday"].ToString();
+                        try
+                        {
+                            var result = JsonConvert.DeserializeObject<JToken>(await content.ReadAsStringAsync());
+                            return result["isPublicHoliday"].ToString();
+                        }
+                        catch (NullReferenceException)
+                        {
+                            return null;
+                        }
+                        catch (JsonSerializationException)
+                        {
+                            return null;
+                        }
                     }
                 }
             }
@@ -46,16 +61,32 @@ namespace HolidayApi.Services
                 {
                     using (HttpContent content = response.Content)
                     {
-                        var result = JsonConvert.DeserializeObject<JToken>(await content.ReadAsStringAsync());
-                        return result["isWorkDay"].ToString();
+                        try
+                        {
+                            var result = JsonConvert.DeserializeObject<JToken>(await content.ReadAsStringAsync());
+                            return result["isWorkDay"].ToString();
+                        }
+                        catch (NullReferenceException)
+                        {
+                            return null;
+                        }
+                        catch (JsonSerializationException)
+                        {
+                            return null;
+                        }
                     }
                 }
             }
         }
 
-        public int GetMaximumFreeDays(string country, int year)
+        public MaximumFreeDays GetMaximumFreeDays(string country, int year)
         {
             IEnumerable<Holiday> holidays = GetHolidaysForYear(country, year).Result;
+
+            if (holidays == null)
+            {
+                return null;
+            }
 
             // Calculate february days in the month
             int febDays = 28;
@@ -184,7 +215,7 @@ namespace HolidayApi.Services
                 }
             }
 
-            return maximumFreeDays;
+            return new MaximumFreeDays(maximumFreeDays);
         }
 
         public async Task<IEnumerable<Holiday>> GetHolidaysForYear(string country, int year)
@@ -195,8 +226,19 @@ namespace HolidayApi.Services
                 {
                     using (HttpContent content = response.Content)
                     {
-                        var result = JsonConvert.DeserializeObject<IEnumerable<Holiday>>(await content.ReadAsStringAsync());
-                        return result;
+                        try
+                        {
+                            var result = JsonConvert.DeserializeObject<IEnumerable<Holiday>>(await content.ReadAsStringAsync());
+                            return result;
+                        }
+                        catch (NullReferenceException)
+                        {
+                            return null;
+                        }
+                        catch (JsonSerializationException)
+                        {
+                            return null;
+                        }
                     }
                 }
             }

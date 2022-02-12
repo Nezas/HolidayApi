@@ -1,9 +1,11 @@
 ﻿using HolidayApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace DayApi.Controllers
 {
     [ApiController]
+    [Produces("application/json")]
     [Route("day")]
     public class DayController : Controller
     {
@@ -14,16 +16,18 @@ namespace DayApi.Controllers
             _dayService = dayService;
         }
 
-        [HttpGet("getDayStatus/{country}/{year}/{month}/{day}")]
-        public async Task<IActionResult> GetDayStatus(string country, int year, int month, int day)
+        [HttpGet("/getDayStatus")]
+        public async Task<IActionResult> GetDayStatus([FromQuery][Required] string country, [FromQuery][Required] int year, [FromQuery][Required] int month, [FromQuery][Required] int day)
         {
-            return Ok(_dayService.GetDayStatus(country, year, month, day));
+            var result = _dayService.GetDayStatus(country, year, month, day);
+            return result == null ? NotFound() : Ok(result);
         }
 
-        [HttpGet("getMaximumFreeDays/{country}/{year}/")]
-        public async Task<IActionResult> GetMaximumFreeDays(string country, int year)
+        [HttpGet("/getMaximumFreeDays")]
+        public async Task<IActionResult> GetMaximumFreeDays([FromQuery][Required] string country, [FromQuery][Required] int year)
         {
-            return Json(_dayService.GetMaximumFreeDays(country, year));
+            var result = _dayService.GetMaximumFreeDays(country, year);
+            return result == null ? NotFound() : Ok(result);
         }
     }
 }

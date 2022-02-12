@@ -3,6 +3,7 @@
 namespace HolidayApi.Controllers
 {
     [ApiController]
+    [Produces("application/json")]
     [Route("country")]
     public class CountryController : Controller
     {
@@ -13,10 +14,11 @@ namespace HolidayApi.Controllers
             _countryService = countryService;
         }
 
-        [HttpGet("getCountries")]
+        [HttpGet("/getCountries")]
         public async Task<IActionResult> GetCountries()
         {
-            return Ok(await _countryService.GetCountries());
+            var result = await _countryService.GetCountries();
+            return result == null ? NotFound() : Ok(result);
         }
     }
 }

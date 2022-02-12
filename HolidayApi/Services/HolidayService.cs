@@ -13,8 +13,19 @@ namespace HolidayApi.Services
                 {
                     using (HttpContent content = response.Content)
                     {
-                        var result = JsonConvert.DeserializeObject<IEnumerable<Holiday>>(await content.ReadAsStringAsync());
-                        return result;
+                        try
+                        {
+                            var result = JsonConvert.DeserializeObject<IEnumerable<Holiday>>(await content.ReadAsStringAsync());
+                            return result;
+                        }
+                        catch (NullReferenceException)
+                        {
+                            return null;
+                        }
+                        catch (JsonSerializationException)
+                        {
+                            return null;
+                        }
                     }
                 }
             }

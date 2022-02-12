@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace HolidayApi.Controllers
 {
     [ApiController]
+    [Produces("application/json")]
     [Route("holiday")]
     public class HolidayController : Controller
     {
@@ -13,10 +15,11 @@ namespace HolidayApi.Controllers
             _holidayService = holidayService;
         }
 
-        [HttpGet("getHolidaysForYear/{country}/{year}")]
-        public async Task<IActionResult> GetHolidaysForYear(string country, int year)
+        [HttpGet("getHolidaysForYear/")]
+        public async Task<IActionResult> GetHolidaysForYear([FromQuery][Required] string country, [FromQuery][Required] int year)
         {
-            return Ok(await _holidayService.GetHolidaysForYear(country, year));
+            var result = await _holidayService.GetHolidaysForYear(country, year);
+            return result == null ? NotFound() : Ok(result);
         }
     }
 }
