@@ -6,28 +6,7 @@ namespace HolidayApi.Services
     {
         public async Task<IEnumerable<Country>> GetCountries()
         {
-            using (var client = new HttpClient())
-            {
-                using (var response = await client.GetAsync("https://kayaposoft.com/enrico/json/v2.0?action=getSupportedCountries"))
-                {
-                    using (HttpContent content = response.Content)
-                    {
-                        try
-                        {
-                            var result = JsonConvert.DeserializeObject<IEnumerable<Country>>(await content.ReadAsStringAsync());
-                            return result;
-                        }
-                        catch (NullReferenceException)
-                        {
-                            return null;
-                        }
-                        catch (JsonSerializationException)
-                        {
-                            return null;
-                        }
-                    }
-                }
-            }
+            return await RestService.Get<IEnumerable<Country>>("getSupportedCountries");
         }
     }
 }

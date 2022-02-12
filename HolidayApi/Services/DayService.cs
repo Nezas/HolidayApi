@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
 namespace HolidayApi.Services
 {
@@ -10,72 +9,30 @@ namespace HolidayApi.Services
             var isPublicHoliday = await IsPublicHoliday(country, year, month, day);
             var isWorkDay = await IsWorkDay(country, year, month, day);
 
-            if (isPublicHoliday == null && isWorkDay == null)
+            if (isPublicHoliday == null || isWorkDay == null)
             {
                 return null;
             }
 
-            if (isPublicHoliday == "True")
+            if (isPublicHoliday["isPublicHoliday"].ToString() == "True")
             {
                 return new DayStatus("holiday");
             }
-            else if (isWorkDay == "True")
+            else if (isWorkDay["isWorkDay"].ToString() == "True")
             {
                 return new DayStatus("workday");
             }
             return new DayStatus("free day");
         }
 
-        public async Task<string> IsPublicHoliday(string country, int year, int month, int day)
+        public async Task<JToken> IsPublicHoliday(string country, int year, int month, int day)
         {
-            using (var client = new HttpClient())
-            {
-                using (var response = await client.GetAsync($"https://kayaposoft.com/enrico/json/v2.0?action=isPublicHoliday&date={day}-{month}-{year}&country={country}"))
-                {
-                    using (HttpContent content = response.Content)
-                    {
-                        try
-                        {
-                            var result = JsonConvert.DeserializeObject<JToken>(await content.ReadAsStringAsync());
-                            return result["isPublicHoliday"].ToString();
-                        }
-                        catch (NullReferenceException)
-                        {
-                            return null;
-                        }
-                        catch (JsonSerializationException)
-                        {
-                            return null;
-                        }
-                    }
-                }
-            }
+            return await RestService.Get<JToken>($"isPublicHoliday&date={day}-{month}-{year}&country={country}");
         }
 
-        public async Task<string> IsWorkDay(string country, int year, int month, int day)
+        public async Task<JToken> IsWorkDay(string country, int year, int month, int day)
         {
-            using (var client = new HttpClient())
-            {
-                using (var response = await client.GetAsync($"https://kayaposoft.com/enrico/json/v2.0?action=isWorkDay&date={day}-{month}-{year}&country={country}"))
-                {
-                    using (HttpContent content = response.Content)
-                    {
-                        try
-                        {
-                            var result = JsonConvert.DeserializeObject<JToken>(await content.ReadAsStringAsync());
-                            return result["isWorkDay"].ToString();
-                        }
-                        catch (NullReferenceException)
-                        {
-                            return null;
-                        }
-                        catch (JsonSerializationException)
-                        {
-                            return null;
-                        }
-                    }
-                }
-            }
+            return await RestService.Get<JToken>($"isWorkDay&date={day}-{month}-{year}&country={country}");
         }
 
         public async Task<MaximumFreeDays> GetMaximumFreeDays(string country, int year)
@@ -213,34 +170,12 @@ namespace HolidayApi.Services
                     }
                 }
             }
-
             return new MaximumFreeDays(maximumFreeDays);
         }
 
         public async Task<IEnumerable<Holiday>> GetHolidaysForYear(string country, int year)
         {
-            using (var client = new HttpClient())
-            {
-                using (var response = await client.GetAsync($"https://kayaposoft.com/enrico/json/v2.0?action=getHolidaysForYear&year={year}&country={country}&holidayType=public_holiday"))
-                {
-                    using (HttpContent content = response.Content)
-                    {
-                        try
-                        {
-                            var result = JsonConvert.DeserializeObject<IEnumerable<Holiday>>(await content.ReadAsStringAsync());
-                            return result;
-                        }
-                        catch (NullReferenceException)
-                        {
-                            return null;
-                        }
-                        catch (JsonSerializationException)
-                        {
-                            return null;
-                        }
-                    }
-                }
-            }
+            return await RestService.Get<IEnumerable<Holiday>>($"getHolidaysForYear&year={year}&country={country}&holidayType=public_holiday");
         }
     }
 }
