@@ -1,26 +1,25 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using HolidayApi.Models;
 
 namespace HolidayApi.Services
 {
     public class DayService
     {
-        public DayStatus GetDayStatus(string country, int year, int month, int day)
+        public async Task<DayStatus> GetDayStatus(string country, int year, int month, int day)
         {
-            var isPublicHoliday = IsPublicHoliday(country, year, month, day);
-            var isWorkDay = IsWorkDay(country, year, month, day);
+            var isPublicHoliday = await IsPublicHoliday(country, year, month, day);
+            var isWorkDay = await IsWorkDay(country, year, month, day);
 
-            if (isPublicHoliday.Result == null && isWorkDay.Result == null)
+            if (isPublicHoliday == null && isWorkDay == null)
             {
                 return null;
             }
 
-            if (isPublicHoliday.Result == "True")
+            if (isPublicHoliday == "True")
             {
                 return new DayStatus("holiday");
             }
-            else if (isWorkDay.Result == "True")
+            else if (isWorkDay == "True")
             {
                 return new DayStatus("workday");
             }
@@ -79,9 +78,9 @@ namespace HolidayApi.Services
             }
         }
 
-        public MaximumFreeDays GetMaximumFreeDays(string country, int year)
+        public async Task<MaximumFreeDays> GetMaximumFreeDays(string country, int year)
         {
-            IEnumerable<Holiday> holidays = GetHolidaysForYear(country, year).Result;
+            IEnumerable<Holiday> holidays = await GetHolidaysForYear(country, year);
 
             if (holidays == null)
             {

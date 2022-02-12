@@ -1,6 +1,4 @@
-﻿using HolidayApi.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DayApi.Controllers
 {
@@ -19,14 +17,14 @@ namespace DayApi.Controllers
         [HttpGet("/getDayStatus")]
         public async Task<IActionResult> GetDayStatus([FromQuery][Required] string country, [FromQuery][Required] int year, [FromQuery][Required] int month, [FromQuery][Required] int day)
         {
-            var result = _dayService.GetDayStatus(country, year, month, day);
+            var result = await _dayService.GetDayStatus(country, year, month, day);
             return result == null ? NotFound() : Ok(result);
         }
 
         [HttpGet("/getMaximumFreeDays")]
         public async Task<IActionResult> GetMaximumFreeDays([FromQuery][Required] string country, [FromQuery][Required] int year)
         {
-            var result = _dayService.GetMaximumFreeDays(country, year);
+            var result = await _dayService.GetMaximumFreeDays(country, year);
             return result == null ? NotFound() : Ok(result);
         }
     }

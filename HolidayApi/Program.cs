@@ -1,6 +1,8 @@
 global using Microsoft.EntityFrameworkCore;
+global using Microsoft.AspNetCore.Mvc;
 global using HolidayApi.Data;
 global using HolidayApi.Services;
+global using HolidayApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

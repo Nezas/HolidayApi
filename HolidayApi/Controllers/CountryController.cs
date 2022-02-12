@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace HolidayApi.Controllers
+﻿namespace HolidayApi.Controllers
 {
     [ApiController]
     [Produces("application/json")]

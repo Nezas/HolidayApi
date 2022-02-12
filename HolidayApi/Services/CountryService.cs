@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using HolidayApi.Models;
 
 namespace HolidayApi.Services
 {
