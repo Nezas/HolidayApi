@@ -1,5 +1,8 @@
 ﻿namespace HolidayApi.Services
 {
+    /// <summary>
+    /// All the logic of the day controller.
+    /// </summary>
     public class DayService : IDayService
     {
         private readonly DataContext _db;
@@ -9,6 +12,10 @@
             _db = db;
         }
 
+        /// <summary>
+        /// Gets day status from database. If database is empty, calls endpoint to fetch data and inserts it to the database.
+        /// </summary>
+        /// <returns> <see cref="DayStatusDto"/> or null if the data was not found </returns>
         public async Task<DayStatusDto> GetDayStatus(string country, int year, int month, int day)
         {
             var dayStatusDto = GetDayStatusFromDb(country, year, month, day);
@@ -39,21 +46,33 @@
             return new DayStatusDto("free day");
         }
 
+        /// <summary>
+        /// Endpoint for checking if the given date is public holiday.
+        /// </summary>
         public async Task<JToken> IsPublicHoliday(string country, int year, int month, int day)
         {
             return await RestService.Get<JToken>($"isPublicHoliday&date={day}-{month}-{year}&country={country}");
         }
 
+        /// <summary>
+        /// Endpoint for checking if the given date is work day.
+        /// </summary>
         public async Task<JToken> IsWorkDay(string country, int year, int month, int day)
         {
             return await RestService.Get<JToken>($"isWorkDay&date={day}-{month}-{year}&country={country}");
         }
 
+        /// <summary>
+        /// Endpoint for fetching holidays for a year.
+        /// </summary>
         public async Task<IEnumerable<HolidayDto>> GetHolidaysForYear(string country, int year)
         {
             return await RestService.Get<IEnumerable<HolidayDto>>($"getHolidaysForYear&year={year}&country={country}&holidayType=public_holiday");
         }
 
+        /// <summary>
+        /// Gets maximum number of free days in a row, for a given country and year.
+        /// </summary>
         public async Task<MaximumFreeDaysDto> GetMaximumFreeDays(string country, int year)
         {
             var maximumFreeDaysDto = GetMaximumFreeDaysFromDb(country, year);
@@ -200,6 +219,9 @@
             return new MaximumFreeDaysDto(maximumFreeDays);
         }
 
+        /// <summary>
+        /// Adds day status to the database.
+        /// </summary>
         public void AddDayStatusToDb(string country, int year, int month, int day, string dayStatusResult)
         {
             var dayStatus = new DayStatus();
@@ -213,6 +235,10 @@
             _db.SaveChanges();
         }
 
+        /// <summary>
+        /// Gets day status from the database.
+        /// </summary>
+        /// <returns> <see cref="DayStatusDto"/> or null if not found</returns>
         public DayStatusDto GetDayStatusFromDb(string country, int year, int month, int day)
         {
             var dayStatus = _db.DayStatuses.FirstOrDefault(ds => ds.Country == country && ds.Year == year && ds.Month == month && ds.Day == day);
@@ -224,6 +250,9 @@
             return new DayStatusDto(dayStatus.DayStatusResult);
         }
 
+        /// <summary>
+        /// Adds maximum number of free days in a row to the database.
+        /// </summary>
         public void AddMaximumFreeDaysToDb(string country, int year, int dayStatusResult)
         {
             var maximumFreeDays = new MaximumFreeDays();
@@ -235,6 +264,10 @@
             _db.SaveChanges();
         }
 
+        /// <summary>
+        /// Gets maximum number of free days in a row from the database.
+        /// </summary>
+        /// <returns> <see cref="MaximumFreeDaysDto"/> or null if not found.</returns>
         public MaximumFreeDaysDto GetMaximumFreeDaysFromDb(string country, int year)
         {
             var maximumFreeDays = _db.MaximumFreeDays.FirstOrDefault(mfd => mfd.Country == country && mfd.Year == year);

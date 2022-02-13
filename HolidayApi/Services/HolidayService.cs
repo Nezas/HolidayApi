@@ -1,5 +1,8 @@
 ﻿namespace HolidayApi.Services
 {
+    /// <summary>
+    /// All the logic of the holiday controller.
+    /// </summary>
     public class HolidayService : IHolidayService
     {
         private readonly DataContext _db;
@@ -9,6 +12,10 @@
             _db = db;
         }
 
+        /// <summary>
+        /// Gets all holidays of the given country and year from database. If database is empty, calls endpoint to fetch data and inserts it to the database.
+        /// </summary>
+        /// <returns> <see cref="IEnumerable{HolidayDto}"/> or null if the data was not found.</returns>
         public async Task<IEnumerable<HolidayDto>> GetHolidaysForYear(string country, int year)
         {
             var holidaysForYearDto = GetHolidaysFromDb(country, year);
@@ -16,18 +23,20 @@
             {
                 return holidaysForYearDto;
             }
+
             var result = await RestService.Get<IEnumerable<HolidayDto>>($"getHolidaysForYear&year={year}&country={country}&holidayType=public_holiday");
-            try
-            {
-                AddHolidaysToDb(result, country);
-            }
-            catch (NullReferenceException)
+            if (result == null)
             {
                 return null;
             }
+
+            AddHolidaysToDb(result, country);
             return result;
         }
 
+        /// <summary>
+        /// Adds holidays to the database.
+        /// </summary>
         public void AddHolidaysToDb(IEnumerable<HolidayDto> holidaysDto, string countryCode)
         {
             foreach (var holidayDto in holidaysDto)
@@ -56,6 +65,10 @@
             _db.SaveChanges();
         }
 
+        /// <summary>
+        /// Gets holidays from the database.
+        /// </summary>
+        /// <returns> <see cref="List{HolidayDto}"/> or null if the data was not found.</returns>
         public List<HolidayDto> GetHolidaysFromDb(string country, int year)
         {
             var holidaysFromDb = _db.Holidays.Where(h => h.CountryCode == country && h.Year == year).ToList();

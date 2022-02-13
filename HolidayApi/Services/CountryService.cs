@@ -1,5 +1,8 @@
 ﻿namespace HolidayApi.Services
 {
+    /// <summary>
+    /// All the logic of the country controller.
+    /// </summary>
     public class CountryService : ICountryService
     {
         private readonly DataContext _db;
@@ -9,17 +12,32 @@
             _db = db;
         }
 
+        /// <summary>
+        /// Gets countries from the database. If database is empty, calls endpoint to fetch data and inserts it to the database.
+        /// </summary>
+        /// <returns> <see cref="IEnumerable{CountryDto}"/> or null if the data was not found </returns>
         public async Task<IEnumerable<CountryDto>> GetCountries()
         {
-            if (_db.Countries.Count() != 0)
+            var countriesDto = GetCountriesFromDb();
+            if (countriesDto.Count() != 0)
             {
-                return GetCountriesFromDb();
+                return countriesDto;
             }
+
             var result = await RestService.Get<IEnumerable<CountryDto>>("getSupportedCountries");
+            if (result == null)
+            {
+                return null;
+            }
+
             AddCountriesToDb(result);
             return result;
         }
 
+        /// <summary>
+        /// Adds <see cref="IEnumerable{CountryDto}"/> to the database.
+        /// </summary>
+        /// <param name="countriesDto"> Countries data which was fetched from the endpoint.</param>
         public void AddCountriesToDb(IEnumerable<CountryDto> countriesDto)
         {
             foreach (var countryDto in countriesDto)
@@ -64,6 +82,10 @@
             _db.SaveChanges();
         }
 
+        /// <summary>
+        /// Gets countries data from the database.
+        /// </summary>
+        /// <returns> <see cref="IEnumerable{CountryDto}"/></returns>
         public IEnumerable<CountryDto> GetCountriesFromDb()
         {
             var countriesInDb = _db.Countries.ToList();
