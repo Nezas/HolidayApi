@@ -3,6 +3,7 @@ using HolidayApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HolidayApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220213140932_AddedHolidayAndHolidayNames")]
+    partial class AddedHolidayAndHolidayNames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -152,6 +154,8 @@ namespace HolidayApi.Migrations
 
                     b.HasKey("HolidayNameId");
 
+                    b.HasIndex("HolidayId");
+
                     b.ToTable("HolidayNames");
                 });
 
@@ -264,6 +268,17 @@ namespace HolidayApi.Migrations
                     b.Navigation("Country");
                 });
 
+            modelBuilder.Entity("HolidayApi.Models.HolidayName", b =>
+                {
+                    b.HasOne("HolidayApi.Models.Holiday", "Holiday")
+                        .WithMany("HolidayNames")
+                        .HasForeignKey("HolidayId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Holiday");
+                });
+
             modelBuilder.Entity("HolidayApi.Models.HolidayType", b =>
                 {
                     b.HasOne("HolidayApi.Models.Country", "Country")
@@ -308,6 +323,11 @@ namespace HolidayApi.Migrations
 
                     b.Navigation("ToDate")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("HolidayApi.Models.Holiday", b =>
+                {
+                    b.Navigation("HolidayNames");
                 });
 #pragma warning restore 612, 618
         }

@@ -11,7 +11,8 @@ namespace HolidayApi.Data
         public DbSet<HolidayType> HolidayTypes { get; set; }
         public DbSet<DayStatus> DayStatuses { get; set; }
         public DbSet<MaximumFreeDays> MaximumFreeDays { get; set; }
-
+        public DbSet<Holiday> Holidays { get; set; }
+        public DbSet<HolidayName> HolidayNames { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
