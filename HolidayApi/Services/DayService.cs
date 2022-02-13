@@ -14,10 +14,10 @@ namespace HolidayApi.Services
 
         public async Task<DayStatusDto> GetDayStatus(string country, int year, int month, int day)
         {
-            var dayStatus = GetDayStatusFromDb(country, year, month, day);
-            if (dayStatus != null)
+            var dayStatusDto = GetDayStatusFromDb(country, year, month, day);
+            if (dayStatusDto != null)
             {
-                return dayStatus;
+                return dayStatusDto;
             }
 
             var isPublicHoliday = await IsPublicHoliday(country, year, month, day);
@@ -59,6 +59,12 @@ namespace HolidayApi.Services
 
         public async Task<MaximumFreeDaysDto> GetMaximumFreeDays(string country, int year)
         {
+            var maximumFreeDaysDto = GetMaximumFreeDaysFromDb(country, year);
+            if (maximumFreeDaysDto != null)
+            {
+                return maximumFreeDaysDto;
+            }
+
             IEnumerable<HolidayDto> holidays = await GetHolidaysForYear(country, year);
 
             if (holidays == null)
@@ -192,6 +198,8 @@ namespace HolidayApi.Services
                     }
                 }
             }
+
+            AddMaximumFreeDaysToDb(country, year, maximumFreeDays);
             return new MaximumFreeDaysDto(maximumFreeDays);
         }
 
@@ -217,6 +225,28 @@ namespace HolidayApi.Services
             }
 
             return new DayStatusDto(dayStatus.DayStatusResult);
+        }
+
+        public void AddMaximumFreeDaysToDb(string country, int year, int dayStatusResult)
+        {
+            var maximumFreeDays = new MaximumFreeDays();
+            maximumFreeDays.Country = country;
+            maximumFreeDays.Year = year;
+            maximumFreeDays.MaximumFreeDaysResult = dayStatusResult;
+
+            _db.MaximumFreeDays.Add(maximumFreeDays);
+            _db.SaveChanges();
+        }
+
+        public MaximumFreeDaysDto GetMaximumFreeDaysFromDb(string country, int year)
+        {
+            var maximumFreeDays = _db.MaximumFreeDays.FirstOrDefault(mfd => mfd.Country == country && mfd.Year == year);
+            if (maximumFreeDays == null)
+            {
+                return null;
+            }
+
+            return new MaximumFreeDaysDto(maximumFreeDays.MaximumFreeDaysResult);
         }
     }
 }
