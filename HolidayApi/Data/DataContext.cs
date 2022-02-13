@@ -5,9 +5,10 @@ namespace HolidayApi.Data
     public class DataContext : DbContext
     {
         public DbSet<Country> Countries { get; set; }
+        public DbSet<Region> Regions { get; set; }
         public DbSet<FromDate> FromDates { get; set; }
         public DbSet<ToDate> ToDates { get; set; }
-
+        public DbSet<HolidayType> HolidayTypes { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
