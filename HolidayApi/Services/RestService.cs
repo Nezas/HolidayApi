@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace HolidayApi.Services
+﻿namespace HolidayApi.Services
 {
     public static class RestService
     {

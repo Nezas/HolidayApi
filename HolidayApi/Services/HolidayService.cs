@@ -1,8 +1,6 @@
-﻿using HolidayApi.Models;
-
-namespace HolidayApi.Services
+﻿namespace HolidayApi.Services
 {
-    public class HolidayService
+    public class HolidayService : IHolidayService
     {
         private readonly DataContext _db;
 

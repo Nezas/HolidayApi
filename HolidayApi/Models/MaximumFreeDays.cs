@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace HolidayApi.Models
+﻿namespace HolidayApi.Models
 {
     public class MaximumFreeDays
     {

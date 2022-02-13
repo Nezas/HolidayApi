@@ -1,6 +1,4 @@
-﻿using HolidayApi.Models;
-
-namespace HolidayApi.Data
+﻿namespace HolidayApi.Data
 {
     public class DataContext : DbContext
     {

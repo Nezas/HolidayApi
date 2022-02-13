@@ -1,15 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace DayApi.Controllers
+﻿namespace DayApi.Controllers
 {
     [ApiController]
     [Produces("application/json")]
     [Route("day")]
     public class DayController : Controller
     {
-        private readonly DayService _dayService;
+        private readonly IDayService _dayService;
 
-        public DayController(DayService dayService)
+        public DayController(IDayService dayService)
         {
             _dayService = dayService;
         }

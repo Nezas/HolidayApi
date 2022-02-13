@@ -1,12 +1,9 @@
-﻿using HolidayApi.Models;
-using Newtonsoft.Json;
-
-namespace HolidayApi.Services
+﻿namespace HolidayApi.Services
 {
-    public class CountryService
+    public class CountryService : ICountryService
     {
         private readonly DataContext _db;
-        
+
         public CountryService(DataContext db)
         {
             _db = db;

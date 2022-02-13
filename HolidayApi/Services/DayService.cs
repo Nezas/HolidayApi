@@ -1,9 +1,6 @@
-﻿using HolidayApi.Models;
-using Newtonsoft.Json.Linq;
-
-namespace HolidayApi.Services
+﻿namespace HolidayApi.Services
 {
-    public class DayService
+    public class DayService : IDayService
     {
         private readonly DataContext _db;
 

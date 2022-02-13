@@ -1,15 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace HolidayApi.Controllers
+﻿namespace HolidayApi.Controllers
 {
     [ApiController]
     [Produces("application/json")]
     [Route("holiday")]
     public class HolidayController : Controller
     {
-        private readonly HolidayService _holidayService;
+        private readonly IHolidayService _holidayService;
 
-        public HolidayController(HolidayService holidayService)
+        public HolidayController(IHolidayService holidayService)
         {
             _holidayService = holidayService;
         }

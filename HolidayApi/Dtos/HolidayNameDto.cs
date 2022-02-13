@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace HolidayApi.Dtos
+﻿namespace HolidayApi.Dtos
 {
     public class HolidayNameDto
     {
