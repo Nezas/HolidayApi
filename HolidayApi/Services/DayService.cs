@@ -1,11 +1,25 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using HolidayApi.Models;
+using Newtonsoft.Json.Linq;
 
 namespace HolidayApi.Services
 {
     public class DayService
     {
+        private readonly DataContext _db;
+
+        public DayService(DataContext db)
+        {
+            _db = db;
+        }
+
         public async Task<DayStatusDto> GetDayStatus(string country, int year, int month, int day)
         {
+            var dayStatus = GetDayStatusFromDb(country, year, month, day);
+            if (dayStatus != null)
+            {
+                return dayStatus;
+            }
+
             var isPublicHoliday = await IsPublicHoliday(country, year, month, day);
             var isWorkDay = await IsWorkDay(country, year, month, day);
 
@@ -16,12 +30,15 @@ namespace HolidayApi.Services
 
             if (isPublicHoliday["isPublicHoliday"].ToString() == "True")
             {
+                AddDayStatusToDb(country, year, month, day, "holiday");
                 return new DayStatusDto("holiday");
             }
             else if (isWorkDay["isWorkDay"].ToString() == "True")
             {
+                AddDayStatusToDb(country, year, month, day, "workday");
                 return new DayStatusDto("workday");
             }
+            AddDayStatusToDb(country, year, month, day, "free day");
             return new DayStatusDto("free day");
         }
 
@@ -33,6 +50,11 @@ namespace HolidayApi.Services
         public async Task<JToken> IsWorkDay(string country, int year, int month, int day)
         {
             return await RestService.Get<JToken>($"isWorkDay&date={day}-{month}-{year}&country={country}");
+        }
+
+        public async Task<IEnumerable<HolidayDto>> GetHolidaysForYear(string country, int year)
+        {
+            return await RestService.Get<IEnumerable<HolidayDto>>($"getHolidaysForYear&year={year}&country={country}&holidayType=public_holiday");
         }
 
         public async Task<MaximumFreeDaysDto> GetMaximumFreeDays(string country, int year)
@@ -173,9 +195,28 @@ namespace HolidayApi.Services
             return new MaximumFreeDaysDto(maximumFreeDays);
         }
 
-        public async Task<IEnumerable<HolidayDto>> GetHolidaysForYear(string country, int year)
+        public void AddDayStatusToDb(string country, int year, int month, int day, string dayStatusResult)
         {
-            return await RestService.Get<IEnumerable<HolidayDto>>($"getHolidaysForYear&year={year}&country={country}&holidayType=public_holiday");
+            var dayStatus = new DayStatus();
+            dayStatus.Country = country;
+            dayStatus.Year = year;
+            dayStatus.Month = month;
+            dayStatus.Day = day;
+            dayStatus.DayStatusResult = dayStatusResult;
+
+            _db.DayStatuses.Add(dayStatus);
+            _db.SaveChanges();
+        }
+
+        public DayStatusDto GetDayStatusFromDb(string country, int year, int month, int day)
+        {
+            var dayStatus = _db.DayStatuses.FirstOrDefault(ds => ds.Country == country && ds.Year == year && ds.Month == month && ds.Day == day);
+            if (dayStatus == null)
+            {
+                return null;
+            }
+
+            return new DayStatusDto(dayStatus.DayStatusResult);
         }
     }
 }

@@ -9,6 +9,7 @@ namespace HolidayApi.Data
         public DbSet<FromDate> FromDates { get; set; }
         public DbSet<ToDate> ToDates { get; set; }
         public DbSet<HolidayType> HolidayTypes { get; set; }
+        public DbSet<DayStatus> DayStatuses { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
