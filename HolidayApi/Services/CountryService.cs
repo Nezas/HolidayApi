@@ -69,7 +69,6 @@ namespace HolidayApi.Services
 
         public IEnumerable<CountryDto> GetCountriesFromDb()
         {
-            List<CountryDto> countriesDto = new();
             var countriesInDb = _db.Countries.ToList();
 
             foreach (var country in countriesInDb)

@@ -19,7 +19,14 @@ namespace HolidayApi.Services
                 return holidaysForYearDto;
             }
             var result = await RestService.Get<IEnumerable<HolidayDto>>($"getHolidaysForYear&year={year}&country={country}&holidayType=public_holiday");
-            AddHolidaysToDb(result, country);
+            try
+            {
+                AddHolidaysToDb(result, country);
+            }
+            catch (NullReferenceException)
+            {
+                return null;
+            }
             return result;
         }
 
