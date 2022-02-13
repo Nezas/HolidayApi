@@ -15,8 +15,8 @@ Then open https://localhost:{your port}/index.html
 Thats it!
 
 ## Hosting
-This api is hosted on
-Azure : https://holidaywebapi.azurewebsites.net/index.html
-Heroku : https://holiday-webapi.herokuapp.com/index.html
+This api is hosted on <br />
+Azure : https://holidaywebapi.azurewebsites.net/index.html <br />
+Heroku : https://holiday-webapi.herokuapp.com/index.html <br />
 
 NOTE: The database is not hosted on the cloud, so for the full testing, you will need to configure api locally as mentioned before.
