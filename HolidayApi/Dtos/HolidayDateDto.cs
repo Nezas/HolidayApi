@@ -1,9 +1,10 @@
-﻿namespace HolidayApi.Models
+﻿namespace HolidayApi.Dtos
 {
-    public class Date
+    public class HolidayDateDto
     {
         public int Day { get; set; }
         public int Month { get; set; }
         public int Year { get; set; }
+        public int DayOfWeek { get; set; }
     }
 }

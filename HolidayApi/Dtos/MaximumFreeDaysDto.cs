@@ -1,10 +1,10 @@
-﻿namespace HolidayApi.Models
+﻿namespace HolidayApi.Dtos
 {
-    public class MaximumFreeDays
+    public class MaximumFreeDaysDto
     {
         public int MaximumFreeDaysInRow { get; set; }
 
-        public MaximumFreeDays(int maximumFreeDaysInRow)
+        public MaximumFreeDaysDto(int maximumFreeDaysInRow)
         {
             MaximumFreeDaysInRow = maximumFreeDaysInRow;
         }

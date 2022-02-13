@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace HolidayApi.Models
+namespace HolidayApi.Dtos
 {
-    public class HolidayName
+    public class HolidayNameDto
     {
         [JsonProperty("Lang")]
         public string Language { get; set; }

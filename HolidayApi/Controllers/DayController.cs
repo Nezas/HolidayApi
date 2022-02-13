@@ -17,8 +17,15 @@ namespace DayApi.Controllers
         [HttpGet("/getDayStatus")]
         public async Task<IActionResult> GetDayStatus([FromQuery][Required] string country, [FromQuery][Required] int year, [FromQuery][Required] int month, [FromQuery][Required] int day)
         {
-            var result = await _dayService.GetDayStatus(country, year, month, day);
-            return result == null ? NotFound() : Ok(result);
+            try
+            {
+                var result = await _dayService.GetDayStatus(country, year, month, day);
+                return result == null ? NotFound() : Ok(result);
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound();
+            }
         }
 
         [HttpGet("/getMaximumFreeDays")]

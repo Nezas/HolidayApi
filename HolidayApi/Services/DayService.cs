@@ -4,7 +4,7 @@ namespace HolidayApi.Services
 {
     public class DayService
     {
-        public async Task<DayStatus> GetDayStatus(string country, int year, int month, int day)
+        public async Task<DayStatusDto> GetDayStatus(string country, int year, int month, int day)
         {
             var isPublicHoliday = await IsPublicHoliday(country, year, month, day);
             var isWorkDay = await IsWorkDay(country, year, month, day);
@@ -16,13 +16,13 @@ namespace HolidayApi.Services
 
             if (isPublicHoliday["isPublicHoliday"].ToString() == "True")
             {
-                return new DayStatus("holiday");
+                return new DayStatusDto("holiday");
             }
             else if (isWorkDay["isWorkDay"].ToString() == "True")
             {
-                return new DayStatus("workday");
+                return new DayStatusDto("workday");
             }
-            return new DayStatus("free day");
+            return new DayStatusDto("free day");
         }
 
         public async Task<JToken> IsPublicHoliday(string country, int year, int month, int day)
@@ -35,9 +35,9 @@ namespace HolidayApi.Services
             return await RestService.Get<JToken>($"isWorkDay&date={day}-{month}-{year}&country={country}");
         }
 
-        public async Task<MaximumFreeDays> GetMaximumFreeDays(string country, int year)
+        public async Task<MaximumFreeDaysDto> GetMaximumFreeDays(string country, int year)
         {
-            IEnumerable<Holiday> holidays = await GetHolidaysForYear(country, year);
+            IEnumerable<HolidayDto> holidays = await GetHolidaysForYear(country, year);
 
             if (holidays == null)
             {
@@ -170,12 +170,12 @@ namespace HolidayApi.Services
                     }
                 }
             }
-            return new MaximumFreeDays(maximumFreeDays);
+            return new MaximumFreeDaysDto(maximumFreeDays);
         }
 
-        public async Task<IEnumerable<Holiday>> GetHolidaysForYear(string country, int year)
+        public async Task<IEnumerable<HolidayDto>> GetHolidaysForYear(string country, int year)
         {
-            return await RestService.Get<IEnumerable<Holiday>>($"getHolidaysForYear&year={year}&country={country}&holidayType=public_holiday");
+            return await RestService.Get<IEnumerable<HolidayDto>>($"getHolidaysForYear&year={year}&country={country}&holidayType=public_holiday");
         }
     }
 }

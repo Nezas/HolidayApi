@@ -4,9 +4,9 @@ namespace HolidayApi.Services
 {
     public class CountryService
     {
-        public async Task<IEnumerable<Country>> GetCountries()
+        public async Task<IEnumerable<CountryDto>> GetCountries()
         {
-            return await RestService.Get<IEnumerable<Country>>("getSupportedCountries");
+            return await RestService.Get<IEnumerable<CountryDto>>("getSupportedCountries");
         }
     }
 }
