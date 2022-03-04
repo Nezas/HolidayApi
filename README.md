@@ -1,7 +1,7 @@
 # HolidayApi
 
 ## Deployment
-To test this project you first need to clone it to your machine. Then open cmd, navigate to project folder and execute
+To test this project you first need to clone it to your machine. Then open cmd, navigate to 'HolidayApi' project folder and execute
 ```sh
 dotnet ef database update
 ```
