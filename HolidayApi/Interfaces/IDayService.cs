@@ -1,4 +1,4 @@
-﻿namespace HolidayApi.Services
+﻿namespace HolidayApi.Interfaces
 {
     public interface IDayService
     {
