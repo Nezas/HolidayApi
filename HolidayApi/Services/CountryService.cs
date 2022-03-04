@@ -18,6 +18,11 @@
         /// <returns> <see cref="IEnumerable{CountryDto}"/> or null if the data was not found </returns>
         public async Task<IEnumerable<CountryDto>> GetCountries()
         {
+            if (_db.IsConnected == false)
+            {
+                return await RestService.Get<IEnumerable<CountryDto>>("getSupportedCountries");
+            }
+
             var countriesDto = GetCountriesFromDb();
             if (countriesDto.Count() != 0)
             {

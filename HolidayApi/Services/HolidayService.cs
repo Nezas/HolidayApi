@@ -18,6 +18,11 @@
         /// <returns> <see cref="IEnumerable{HolidayDto}"/> or null if the data was not found.</returns>
         public async Task<IEnumerable<HolidayDto>> GetHolidaysForYear(string country, int year)
         {
+            if (_db.IsConnected == false)
+            {
+                return await RestService.Get<IEnumerable<HolidayDto>>($"getHolidaysForYear&year={year}&country={country}&holidayType=public_holiday");
+            }
+
             var holidaysForYearDto = GetHolidaysFromDb(country, year);
             if (holidaysForYearDto != null)
             {

@@ -2,6 +2,7 @@
 {
     public class DataContext : DbContext
     {
+        public bool IsConnected { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Region> Regions { get; set; }
         public DbSet<FromDate> FromDates { get; set; }
@@ -14,7 +15,11 @@
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-
+            IsConnected = false;
+            if(Database.CanConnect())
+            {
+                IsConnected = true;
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

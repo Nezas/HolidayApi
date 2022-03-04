@@ -18,10 +18,13 @@
         /// <returns> <see cref="DayStatusDto"/> or null if the data was not found </returns>
         public async Task<DayStatusDto> GetDayStatus(string country, int year, int month, int day)
         {
-            var dayStatusDto = GetDayStatusFromDb(country, year, month, day);
-            if (dayStatusDto != null)
+            if(_db.IsConnected)
             {
-                return dayStatusDto;
+                var dayStatusDto = GetDayStatusFromDb(country, year, month, day);
+                if (dayStatusDto != null)
+                {
+                    return dayStatusDto;
+                }
             }
 
             var isPublicHoliday = await IsPublicHoliday(country, year, month, day);
@@ -32,18 +35,21 @@
                 return null;
             }
 
+            string dayStatus = "free day";
             if (isPublicHoliday["isPublicHoliday"].ToString() == "True")
             {
-                AddDayStatusToDb(country, year, month, day, "holiday");
-                return new DayStatusDto("holiday");
+                dayStatus = "holiday";
             }
             else if (isWorkDay["isWorkDay"].ToString() == "True")
             {
-                AddDayStatusToDb(country, year, month, day, "workday");
-                return new DayStatusDto("workday");
+                dayStatus = "workday";
             }
-            AddDayStatusToDb(country, year, month, day, "free day");
-            return new DayStatusDto("free day");
+
+            if (_db.IsConnected)
+            {
+                AddDayStatusToDb(country, year, month, day, dayStatus);
+            }
+            return new DayStatusDto(dayStatus);
         }
 
         /// <summary>
@@ -75,10 +81,13 @@
         /// </summary>
         public async Task<MaximumFreeDaysDto> GetMaximumFreeDays(string country, int year)
         {
-            var maximumFreeDaysDto = GetMaximumFreeDaysFromDb(country, year);
-            if (maximumFreeDaysDto != null)
+            if (_db.IsConnected)
             {
-                return maximumFreeDaysDto;
+                var maximumFreeDaysDto = GetMaximumFreeDaysFromDb(country, year);
+                if (maximumFreeDaysDto != null)
+                {
+                    return maximumFreeDaysDto;
+                }
             }
 
             IEnumerable<HolidayDto> holidays = await GetHolidaysForYear(country, year);
@@ -215,7 +224,10 @@
                 }
             }
 
-            AddMaximumFreeDaysToDb(country, year, maximumFreeDays);
+            if (_db.IsConnected)
+            {
+                AddMaximumFreeDaysToDb(country, year, maximumFreeDays);
+            }
             return new MaximumFreeDaysDto(maximumFreeDays);
         }
 
