@@ -1,16 +1,11 @@
 global using System.ComponentModel.DataAnnotations;
-global using System.ComponentModel.DataAnnotations.Schema;
-global using Microsoft.EntityFrameworkCore;
 global using Microsoft.AspNetCore.Mvc;
-global using Newtonsoft.Json;
-global using Newtonsoft.Json.Linq;
-global using HolidayApi.Data;
-global using HolidayApi.Services;
-global using HolidayApi.Dtos;
-global using HolidayApi.Models;
-global using HolidayApi.Interfaces;
-using Microsoft.OpenApi.Models;
+global using HolidayApi.BLL.Services;
+global using HolidayApi.BLL.Interfaces;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using HolidayApi.DAL.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

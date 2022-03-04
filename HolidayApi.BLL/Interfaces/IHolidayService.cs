@@ -1,6 +1,4 @@
-﻿using HolidayApi.BLL.Dtos;
-
-namespace HolidayApi.Interfaces
+﻿namespace HolidayApi.BLL.Interfaces
 {
     public interface IHolidayService
     {

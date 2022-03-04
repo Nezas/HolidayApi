@@ -1,7 +1,4 @@
-﻿using HolidayApi.BLL.Dtos;
-using Newtonsoft.Json.Linq;
-
-namespace HolidayApi.Interfaces
+﻿namespace HolidayApi.BLL.Interfaces
 {
     public interface IDayService
     {
